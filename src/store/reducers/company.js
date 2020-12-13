@@ -4,8 +4,8 @@ import myHome from '../../assets/svgs/myhome.svg';
 import insure from '../../assets/svgs/insure.svg';
 import manage from '../../assets/svgs/manage.svg';
 import faceIt from '../../assets/svgs/faceit.svg';
-
-import ye from '../../assets/images/ye.jpg';
+*/
+import ye from '../../assets/images/ye.jpg';/*
 import agera from '../../assets/images/agera.jpg';
 import baby from '../../assets/images/baby.jpg';
 import ali from '../../assets/images/ali.jpg';
