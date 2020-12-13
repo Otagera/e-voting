@@ -1,4 +1,4 @@
-export default ()=>{
+export default anon = ()=>{
 	const user = JSON.parse(localStorage.getItem('user'));
 
 	if(user && user.token){

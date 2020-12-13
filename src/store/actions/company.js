@@ -103,7 +103,7 @@ export const getCompanyRequest = fakeId =>{
 			console.log(err);
 		});
 	};
-}
+}getCompetitions
 export const addCompetition = competition =>{
 	return {
 		type: actionTypes.ADD_COMPETITION,
@@ -157,7 +157,7 @@ const getCompetitions = competitions =>{
 export const getCompetitionsRequest = () =>{
 	return dispatch =>{
 		setTimeout(()=>{
-			//dispatch(getCompany(compaFakeId));
+			dispatch(getCompany(compaFakeId));
 		}, 1000);
 	};
 }
