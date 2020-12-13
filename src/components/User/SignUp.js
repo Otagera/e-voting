@@ -38,7 +38,7 @@ class SignUp extends Component {
     			value: '',
     			validation: {
     				required: true,
-    				minLenth: 6
+    				minLength: 6
     			},
     			valid: false,
     			touched: false
@@ -66,12 +66,9 @@ class SignUp extends Component {
     			elementConfig: {
     				type: 'submit'
     			},
+                validation: {},
     			elementName: 'submit',
     			value: 'Submit',
-    			validation: {
-    				required: true,
-    				confirmPassword: true
-    			},
     			valid: true
     		}
     	},
@@ -146,7 +143,7 @@ class SignUp extends Component {
 									passwordType={config.passwordType}
 									invalid={!config.valid}
 									disabled={!this.state.formIsValid}
-									shouldValidate={config.validate}
+									shouldValidate={config.validation}
 									touched={config.touched}
 									handleInputValue={this.handleInputValue}
 									handleShowPassword={this.handleShowPassword}

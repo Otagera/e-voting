@@ -128,7 +128,7 @@ class Login extends Component {
 									passwordType={config.passwordType}
 									invalid={!config.valid}
 									disabled={!this.state.formIsValid}
-									shouldValidate={config.validate}
+									shouldValidate={config.validation}
 									touched={config.touched}
 									handleInputValue={this.handleInputValue}
 									handleShowPassword={this.handleShowPassword}

@@ -1,9 +1,10 @@
 export {
-	burgerBuilderInit,
-	addIngredient,
-	removeIngredient
-} from './burgerBuilder';
-export {
-	submit,
-	orderInit
-} from './order';
+	addCompany,
+	removeCompany,
+	editCompanyRequest,
+	getCompaniesRequest,
+	getCompanyRequest,
+	addCompetition,
+	getCompetitionsRequest,
+	getCompetitionRequest
+} from './company.js';

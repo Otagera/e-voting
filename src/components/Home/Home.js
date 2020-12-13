@@ -1,5 +1,5 @@
 import React from 'react';
-import img from '../../assets/Ye.jpg'
+import img from '../../assets/images/ye.jpg'
 
 const home = ( props )=>{
 	return (
@@ -16,7 +16,7 @@ const home = ( props )=>{
 					<button>Learn more</button>					
 				</div>
 				<div className='Right-Landing'>
-					<img src={img} alt="Red Star" />
+					<img src={img} alt="YE" />
 				</div>
 			</section>
 			<section className='Services'>

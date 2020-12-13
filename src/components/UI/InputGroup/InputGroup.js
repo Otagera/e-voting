@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 class InputGroup extends Component{
 	state = {
@@ -29,39 +29,44 @@ class InputGroup extends Component{
 	}
 
 	render(){
+		const { 
+			invalid, shouldValidate, touched, elementType,
+			elementConfig, name, passwordType, handleShowPassword,
+			passwordRevealed, title
+		} = this.props;
 		let inputElement = null;
 		let inputClasses = [];
-
-		if(this.props.invalid && this.props.shouldValidate && this.props.touched){
+		if(invalid && shouldValidate && touched){
 			inputClasses.push('Invalid');
 		}
-		switch (this.props.elementType) {
+		switch (elementType) {
 			case ('input'):
 				inputElement = <input
 									className={inputClasses.join(' ')}
-									{...this.props.elementConfig}
-									value={this.state[this.props.name]}
+									{...elementConfig}
+									value={this.state[name]}
 									onChange={this.handleChange}
-									name={this.props.name} />;
+									name={name} />;
 				break;
 			case ('textarea'):
 				inputElement = <textarea
 									className={inputClasses.join(' ')}
-									{...this.props.elementConfig}
-									value={this.state[this.props.name]}
+									{...elementConfig}
+									value={this.state[name]}
 									onChange={this.handleChange}
-									name={this.props.name}
+									name={name}
 									cols={27}
 									rows={40} />;
 				break;
 			case ('select'):
 				inputElement = <select
 									className={inputClasses.join(' ')}
-									value={this.state[this.props.name]}
+									value={this.state[name]}
 									onChange={this.handleChange}
-									name={this.props.name} >
+									name={name} >
+									<option value='' selected></option>
 									{
-										this.props.elementConfig.options.map(option=>(
+										elementConfig.options.map(option=>(
 											<option key={option.value} value={option.value}>{option.displayValue}</option>
 										))
 									}
@@ -72,39 +77,82 @@ class InputGroup extends Component{
 									type="file"
 									ref={this.props.ref}
 									className={inputClasses.join(' ')}
-									name={this.props.name}
+									name={name}
 									onChange={this.handleChange} />
 				break;
 			case ('submit'):
 				inputElement = <input
 									type="submit"
 									className={inputClasses.join(' ')}
-									name={this.props.name}
+									name={name}
 									value={this.props.value}
 									disabled={this.props.disabled} />
 				break;
 			default:
 				inputElement = <input
 									className={inputClasses.join(' ')}
-									{...this.props.elementConfig}
-									value={this.state[this.props.name]}
+									{...elementConfig}
+									value={this.state[name]}
 									onChange={this.handleChange}
-									name={this.props.name} />;
+									name={name} />;
 				break;
 		}
 		let icon = null;
-		if(this.props.passwordType){
-			icon = <span onClick={this.props.handleShowPassword.bind(this, this.props.name)}>
+		if(passwordType){
+			icon = <span onClick={handleShowPassword.bind(this, name)}>
 						<span className='IconSpan'>
 							<FontAwesomeIcon
-								icon={(this.props.passwordRevealed)? faEye: faEyeSlash}
+								icon={(passwordRevealed)? faEye: faEyeSlash}
 								className='EyeIcon'/>
 						</span>
 					</span>
 		}
+		let validError = null;
+		if(invalid && shouldValidate && touched){
+			let text = null;
+			if(shouldValidate.required) {
+				text = `${title} is required`;
+				if(this.state[name] && shouldValidate.email) {
+					text = `${title} is not a valid email`;
+				} else if(this.state[name] && shouldValidate.url) {
+					text = `Please enter a valid URL`;
+				} else if(this.state[name] && shouldValidate.confirmPassword) {
+					text = `Be sure that ${title} matches the Password entered`;
+				} else if(this.state[name] && shouldValidate.minLength) {
+					text = `${title} should be more than ${shouldValidate.minLength} characters`;
+				} else if(this.state[name] && shouldValidate.maxLength) {
+					text = `${title} should be less than ${shouldValidate.maxLength} characters`;
+				} else if(this.state[name] && shouldValidate.minLength && shouldValidate.maxLength) {
+					text = `${title} should be less than ${shouldValidate.minLength} and more than ${shouldValidate.maxLength} characters`;
+				}
+			}else {				
+				if(this.state[name] && shouldValidate.email) {
+					text = `${title} is not a valid email`;
+				} else if(this.state[name] && shouldValidate.url) {
+					text = `Please enter a valid URL`;
+				} else if(this.state[name] && shouldValidate.confirmPassword) {
+					text = `Be sure that ${title} matches the Password entered`;
+				} else if(this.state[name] && shouldValidate.minLength) {
+					text = `${title} should be more than ${shouldValidate.minLength} characters`;
+				} else if(this.state[name] && shouldValidate.maxLength) {
+					text = `${title} should be less than ${shouldValidate.maxLength} characters`;
+				} else if(this.state[name] && shouldValidate.minLength && shouldValidate.maxLength) {
+					text = `${title} should be less than ${shouldValidate.minLength} and more than ${shouldValidate.maxLength} characters`;
+				}
+			}
+			validError = <span>
+							<span className='Validate-Error'>
+								<span className='Validate-Error-Text'>
+									<FontAwesomeIcon icon={faExclamationCircle}/>
+									{text}
+								</span>
+							</span>
+						</span>
+		}
 		return(
 			<div className={`FlexRow InputGroup`}>
-				{(this.props.elementType !== 'submit')? <label>{this.props.title}</label> : null}
+				{(this.props.elementType !== 'submit')? <label>{title}</label> : null}
+				{validError}
 				{inputElement}
 				{icon}
 				{/* <button>Add</button> */}

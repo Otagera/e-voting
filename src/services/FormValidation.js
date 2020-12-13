@@ -16,6 +16,10 @@ export default class FormValidation {
 	    		let pattern = RegExp(/^([a-zA-Z0-9_\-.]+)@([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/i);
 	    		isValid = pattern.test(value) && isValid;
 	    	}
+	    	if(rules.url){
+	    		let pattern = RegExp(/^([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/i);
+	    		isValid = pattern.test(value) && isValid;
+	    	}
 	    	if(rules.confirmPassword){
 	    		isValid = (value === passwordValue) && isValid;
 	    	}

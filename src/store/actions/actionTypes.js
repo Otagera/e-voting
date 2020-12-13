@@ -1,6 +1,10 @@
-export const BB_INIT = 'BB_INIT';
-export const ADD_INGREDIENT = 'ADD_INGREDIENT';
-export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
-export const SUBMIT = 'SUBMIT';
-export const DONE = 'DONE';
-export const ORDER_INIT = 'ORDER_INIT';
+export const ADD_COMPANY = 'ADD_COMPANY';
+export const REMOVE_COMPANY = 'REMOVE_COMPANY';
+export const EDIT_COMPANY = 'EDIT_COMPANY';
+export const GET_COMPANIES = 'GET_COMPANIES';
+export const GET_COMPANY = 'GET_COMPANY';
+export const ADD_COMPETITION = 'ADD_COMPETITION';
+export const REMOVE_COMPETITION = 'REMOVE_COMPETITION';
+export const EDIT_COMPETITION = 'EDIT_COMPETITION';
+export const GET_COMPETITIONS = 'GET_COMPETITIONS';
+export const GET_COMPETITION = 'GET_COMPETITION';

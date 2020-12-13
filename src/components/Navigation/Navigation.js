@@ -13,11 +13,16 @@ class Navigation extends Component {
     			title: 'Home',
     			show: true
     		},
-    		intro: {
+    		/*intro: {
     			to: '/intro',
     			title: 'Intro',
     			show: true
-    		},
+    		},*/
+            companies: {
+                to: '/companies',
+                title: 'Companies',
+                show: true
+            },
     		signup: {
     			to: '/signup',
     			title: 'SignUp',
@@ -26,16 +31,6 @@ class Navigation extends Component {
             login: {
                 to: '/login',
                 title: 'Login',
-                show: true
-            },
-            companies: {
-                to: '/companies',
-                title: 'Companies',
-                show: true
-            },
-            competitions: {
-                to: '/competitions',
-                title: 'Competitions',
                 show: true
             }/*,
     		newCompany: {
@@ -94,25 +89,25 @@ class Navigation extends Component {
 				<ul>
 					{
 						navItemsArray.map(item =>{
-								return ( 
-									<Aux key={item.id}>
-										{item.config.show && <li>
-											<NavLink
-												onClick={(e)=>this.test(e, item.id)}
-												to={item.config.to}
-												exact 
-												activeClassName='ActiveNavLink'>
-													{item.config.title}
-											</NavLink>
-										</li>}
-									</Aux>
-								)
-							}
-						)
-					}
-				</ul>
-			</nav>
-			);
+							return ( 
+								<Aux key={item.id}>
+									{item.config.show && <li>
+										<NavLink
+											onClick={(e)=>this.test(e, item.id)}
+											to={item.config.to}
+											exact 
+											activeClassName='ActiveNavLink'>
+												{item.config.title}
+										</NavLink>
+									</li>}
+								</Aux>
+							)
+						}
+					)
+				}
+			</ul>
+		</nav>
+		);
 	}
 }
 export default Navigation;
