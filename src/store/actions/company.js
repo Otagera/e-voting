@@ -154,10 +154,3 @@ const getCompetitions = competitions =>{
 		competitions: competitions
 	};
 }
-/* export const getCompetitionsRequest = () =>{
-	return dispatch =>{
-		setTimeout(()=>{
-			dispatch(getCompetitions(compaFakeId));
-		}, 1000);
-	};
-} */

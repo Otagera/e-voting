@@ -5,6 +5,5 @@ export {
 	getCompaniesRequest,
 	getCompanyRequest,
 	addCompetition,
-	getCompetitionsRequest,
-	getCompetitionRequest
+	getCompetitionsRequest
 } from './company.js';
