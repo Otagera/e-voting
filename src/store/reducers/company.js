@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionTypes';
-
+/*
 import myHome from '../../assets/svgs/myhome.svg';
 import insure from '../../assets/svgs/insure.svg';
 import manage from '../../assets/svgs/manage.svg';
@@ -10,6 +10,7 @@ import agera from '../../assets/images/agera.jpg';
 import baby from '../../assets/images/baby.jpg';
 import ali from '../../assets/images/ali.jpg';
 import mi from '../../assets/images/mi.jpg';
+*/
 import { updateObject } from '../utility';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
