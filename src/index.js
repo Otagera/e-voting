@@ -14,7 +14,7 @@ import companyReducer from './store/reducers/company';
 if(process.env.NODE_ENV === 'development'){
 	axios.defaults.baseURL = 'http://127.0.0.1:3003/api';
 }else if(process.env.NODE_ENV === 'production'){
-	//axios.defaults.baseURL = 'https://evening-wildwood-17350.herokuapp.com/api';
+	axios.defaults.baseURL = 'https://whispering-thicket-42706.herokuapp.com/api';
 }
 //axios.defaults.headers.common['Autorization'] = 'AUTH TOKEN';
 axios.interceptors.request.use(request=>{
