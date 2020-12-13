@@ -154,10 +154,10 @@ const getCompetitions = competitions =>{
 		competitions: competitions
 	};
 }
-export const getCompetitionsRequest = () =>{
+/* export const getCompetitionsRequest = () =>{
 	return dispatch =>{
 		setTimeout(()=>{
-			dispatch(getCompany(compaFakeId));
+			dispatch(getCompetitions(compaFakeId));
 		}, 1000);
 	};
-}
+} */
