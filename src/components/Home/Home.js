@@ -7,11 +7,11 @@ const home = ( props )=>{
 			<section className='Landing'>
 				<div className='Left-Landing'>
 					<p>
-						Lorem ipsum dolor sit amet consectetur adipisicing elit.
-						Architecto, quas corporis, voluptatibus enim tempora,
-						excepturi neque fuga voluptatem alias impedit adipisci
-						cum laudantium blanditiis quidem totam officiis nesciunt?
-						Cupiditate, libero.
+						This is a website to help contest organizers create competitions,
+						add contestant and allow fans to vote for their favorites.
+						More features are to integrate payment for instance of contests
+						where to vote you need to pay for those votes and also would add social media
+						integration to measure social media engagements of contestants.
 					</p>
 					<button>Learn more</button>					
 				</div>
@@ -25,8 +25,8 @@ const home = ( props )=>{
 					<div>
 						<h2>Create your own competitions and set up different types</h2>
 						<p>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit.
-							Architecto, quas corporis, ...
+							You can Create a new competition and specify several features
+							unique to it.
 						</p>
 					</div>
 				</article>
@@ -35,8 +35,10 @@ const home = ( props )=>{
 					<div>
 						<h2>Accept payment for votes</h2>
 						<p>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit.
-							Architecto, quas corporis, ...
+							Have you ever thought of monitizing votes?
+							Well we've got you covered, for competitions where it'll
+							require user to pay a certain ammount before the can vote.
+							You can add that feature to your competition.
 						</p>
 					</div>
 				</article>
@@ -45,8 +47,8 @@ const home = ( props )=>{
 					<div>
 						<h2>Ensure theres no malpractice as the results could be audited</h2>
 						<p>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit.
-							Architecto, quas corporis, ...
+							The would be a log of every voter so the results could be audited if
+							they are contested.
 						</p>
 					</div>
 				</article>
