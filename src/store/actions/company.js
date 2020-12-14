@@ -103,7 +103,7 @@ export const getCompanyRequest = fakeId =>{
 			console.log(err);
 		});
 	};
-}getCompetitions
+}
 export const addCompetition = competition =>{
 	return {
 		type: actionTypes.ADD_COMPETITION,
@@ -148,9 +148,9 @@ export const getCompetitionRequest = (companyFakeId, competitionFakeId) =>{
 		});
 	};
 }
-const getCompetitions = competitions =>{
+/*const getCompetitions = competitions =>{
 	return {
 		type: actionTypes.GET_COMPETITIONS,
 		competitions: competitions
 	};
-}
+}*/

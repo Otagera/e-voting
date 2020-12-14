@@ -1,4 +1,4 @@
-export default anon = ()=>{
+const AuthHeader = ()=>{
 	const user = JSON.parse(localStorage.getItem('user'));
 
 	if(user && user.token){
@@ -8,3 +8,4 @@ export default anon = ()=>{
 		return {};
 	}
 }
+export default AuthHeader;
