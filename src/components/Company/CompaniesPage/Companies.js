@@ -15,7 +15,7 @@ class Companies extends Component {
     	this.props.onInit();
     }
 	render(){
-		const { companies, faSocials, userAvaliable } = this.props;
+		const { companies, faSocials } = this.props;
 		const { error } = this.state;
 		let display = null;
 		if(!companies){
