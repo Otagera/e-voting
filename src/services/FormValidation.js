@@ -17,7 +17,7 @@ export default class FormValidation {
 	    		isValid = pattern.test(value) && isValid;
 	    	}
 	    	if(rules.url){
-	    		let pattern = RegExp(/^([a-zA-Z0-9_\-.]+)\.([a-zA-Z]{2,5})$/i);
+	    		let pattern = RegExp(/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#/]+\/?)*$/);
 	    		isValid = pattern.test(value) && isValid;
 	    	}
 	    	if(rules.confirmPassword){

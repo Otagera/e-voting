@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import InputGroup from '../../../../../UI/InputGroup/InputGroup';
 import Modal from '../../../../../UI/Modal/Modal';
+import Loader from '../../../../../UI/Loader/Loader';
 import Aux from '../../../../../../hoc/Auxillary/Auxillary';
 import FormValidation from '../../../../../../services/FormValidation';
 import * as actions from '../../../../../../store/actions/index';
@@ -15,7 +16,7 @@ class NewCategory extends Component {
     			elementType: 'input',
     			elementConfig: {
     				type: 'text',
-    				placeholder: 'The Company Name'
+    				placeholder: 'Category Name'
     			},
     			elementTitle: 'Name',
     			elementName: 'name',
@@ -26,6 +27,21 @@ class NewCategory extends Component {
     			valid: false,
     			touched: false
     		},
+            description: {
+                elementType: 'text',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Description of Category'
+                },
+                elementTitle: 'Description',
+                elementName: 'description',
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
     		type: {
     			elementType: 'select',
     			elementConfig: {
@@ -64,20 +80,22 @@ class NewCategory extends Component {
     	error: false,
     	formIsValid: false,
     	submitted: false,
-    	showSuccessInfo: false,
-    	categoryToSubmit: {
-    		name: '',
-    		description: ''
-    	}
+        submitClicked: false,
+    	showSuccessInfo: false
     }
     componentDidMount(){
         const { match } = this.props;
+        this.props.onAddInit();
         this.props.onInit(+match.params.companyId, +match.params.competitionId);
+    }
+    static getDerivedStateFromProps(props, state){
+        if(props.successfull){
+            return { submitClicked: false };
+        }
+        return null;
     }
     handleInputValue = (value, name) =>{
     	let formData = { ...this.state.formData };
-        let catToSub = { ...this.state.categoryToSubmit };
-        catToSub[name] = value;
     	formData[name].value = value;
     	formData[name].valid = FormValidation.checkValidity(formData[name].value, formData[name].validation);
     	formData[name].touched = true;
@@ -87,12 +105,13 @@ class NewCategory extends Component {
     		formIsValid = formData[inputIdentifiers].valid && formIsValid;
     	}
 
-    	this.setState({ formData: formData, formIsValid: formIsValid, categoryToSubmit: catToSub });
+    	this.setState({ formData: formData, formIsValid: formIsValid });
     }
     handleSubmit = (e)=>{
     	e.preventDefault();
-    	// let fd = new FormData(this.state.form.current);
-    	this.props.onSubmitAdd(this.state.categoryToSubmit);
+    	let fd = new FormData(this.state.form.current);
+        fd.set('competitionFakeId', +this.props.match.params.competitionId);
+    	this.props.onSubmitAdd(fd);
     	this.setState({ showSuccessInfo: true });
     }
     removeModal = ()=>{
@@ -100,25 +119,33 @@ class NewCategory extends Component {
     }
 	render(){
 		const { 
-			submitted, formData, form,
+			submitted, formData, form, submitClicked,
 			formIsValid, showSuccessInfo
 		} = this.state;
         const { selectedCompany, selectedCompetition, match } = this.props;
 		let redirect = null;
-		let img = <img alt=''/>;
-		if(submitted){
-			redirect = <Redirect to={`/company/${match.params.companyId}/competition/${match.params.competitionId}`} />
-		}
-		if(selectedCompany && selectedCompany.img){
-			img = <img src={selectedCompany.img} alt="Company Logo" />
-		}
 		let formElementArray = [];
+        let modalDisplay = null;
+		let img = <img alt=''/>;
+		if(submitted){ redirect = <Redirect to={`/company/${match.params.companyId}/competition/${match.params.competitionId}`} /> }
+		if(selectedCompany && selectedCompany.img){ img = <img src={selectedCompany.img} alt="Company Logo" /> }
 		for (let key in formData) {
 			formElementArray.push({
 				id: key,
 				config: formData[key]
 			});
 		}
+        if(submitClicked){ modalDisplay = <Loader />; }
+        else {
+            modalDisplay = (
+                <Aux>
+                    <p>
+                        Category Created and Successfully Added to {(selectedCompetition && selectedCompetition.name)? selectedCompetition.name: null}
+                    </p>
+                    <button onClick={this.removeModal}>Continue</button>
+                </Aux>
+            );
+        }
 		return (
 			<Aux>
 				{redirect}
@@ -150,12 +177,7 @@ class NewCategory extends Component {
 					}
 					<Modal show={showSuccessInfo} modalClosed={this.removeModal}
 							successfull={true}>
-							<div>
-								<p>
-                                    Category Created and Successfully Added to {(selectedCompetition && selectedCompetition.name)? selectedCompetition.name: null}
-                                </p>
-								<button onClick={this.removeModal}>Continue</button>
-							</div>
+							<div>{modalDisplay}</div>
 					</Modal>
 				</form>
 			</Aux>
@@ -166,13 +188,15 @@ class NewCategory extends Component {
 const mapStateToProps = state =>{
     return {
         selectedCompany: state.company.selectedCompany,
-        selectedCompetition: state.company.selectedCompetition
+        selectedCompetition: state.company.selectedCompetition,
+        successfull: state.company.addCategorySuccess
     }
 }
 const mapDispatchToProps = dispatch =>{
 	return {
         onInit: (companyId, competitionId)=>dispatch(actions.getCompetitionRequest(companyId, competitionId)),
- 		onSubmitAdd: (company)=>dispatch(actions.addCompetition(company))
+        onAddInit: ()=>dispatch(actions.addCategoryInit()),
+ 		onSubmitAdd: (categoryData)=>dispatch(actions.addCategoryRequest(categoryData))
  	};
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewCategory));

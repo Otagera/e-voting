@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import InputGroup from '../../../../UI/InputGroup/InputGroup';
 import Modal from '../../../../UI/Modal/Modal';
+import Loader from '../../../../UI/Loader/Loader';
 import Aux from '../../../../../hoc/Auxillary/Auxillary';
 import FormValidation from '../../../../../services/FormValidation';
 import * as actions from '../../../../../store/actions/index';
@@ -15,7 +16,7 @@ class NewCompetition extends Component {
     			elementType: 'input',
     			elementConfig: {
     				type: 'text',
-    				placeholder: 'The Company Name'
+    				placeholder: 'The Competition Name'
     			},
     			elementTitle: 'Name',
     			elementName: 'name',
@@ -30,7 +31,7 @@ class NewCompetition extends Component {
     			elementType: 'text',
     			elementConfig: {
     				type: 'text',
-    				placeholder: 'The Company Description'
+    				placeholder: 'The Competition Description'
     			},
     			elementTitle: 'Description',
     			elementName: 'description',
@@ -41,6 +42,20 @@ class NewCompetition extends Component {
     			valid: false,
     			touched: false
     		},
+            deadline: {
+                elementType: 'date',
+                elementConfig: {
+                    type: 'text'
+                },
+                elementTitle: 'Voting Deadline',
+                elementName: 'deadline',
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
+            },
             submit: {
                 elementType: 'submit',
                 elementConfig: {
@@ -58,19 +73,21 @@ class NewCompetition extends Component {
     	error: false,
     	formIsValid: false,
     	submitted: false,
-    	showSuccessInfo: false,
-    	competitionToSubmit: {
-    		name: '',
-    		description: ''
-    	}
+        submitClicked: false,
+    	showSuccessInfo: false
     }
     componentDidMount(){
+        this.props.onAddInit();
         this.props.onInit(+this.props.match.params.companyId);
+    }
+    static getDerivedStateFromProps(props, state){
+        if(props.successfull){
+            return { submitClicked: false };
+        }
+        return null;
     }
     handleInputValue = (value, name) =>{
     	let formData = { ...this.state.formData };
-        let comToSub = { ...this.state.competitionToSubmit };
-        comToSub[name] = value;
     	formData[name].value = value;
     	formData[name].valid = FormValidation.checkValidity(formData[name].value, formData[name].validation);
     	formData[name].touched = true;
@@ -80,44 +97,56 @@ class NewCompetition extends Component {
     		formIsValid = formData[inputIdentifiers].valid && formIsValid;
     	}
 
-    	this.setState({ formData: formData, formIsValid: formIsValid, competitionToSubmit: comToSub });
+    	this.setState({ formData: formData, formIsValid: formIsValid });
     }
     handleSubmit = (e)=>{
     	e.preventDefault();
-    	// let fd = new FormData(this.state.form.current);
-    	this.props.onSubmitAdd(this.state.competitionToSubmit);
-    	this.setState({ showSuccessInfo: true });
+    	let fd = new FormData(this.state.form.current);
+        fd.set('companyFakeId', +this.props.match.params.companyId);
+    	this.props.onSubmitAdd(fd);
+    	this.setState({ submitClicked: true, showSuccessInfo: true });
     }
     removeModal = ()=>{
     	this.setState({ showSuccessInfo: false, submitted: true });
     }
 	render(){
 		const { 
-			submitted, formData, form,
+			submitted, formData, form, submitClicked,
 			formIsValid, showSuccessInfo
 		} = this.state;
         const { selectedCompany, match } = this.props;
 		let redirect = null;
-		let img = <img alt=''/>;
-		if(submitted){
-			redirect = <Redirect to={`/company/${match.params.companyId}`} />
-		}
-		if(selectedCompany && selectedCompany.img){
-			img = <img src={selectedCompany.img} alt="Company Logo" />
-		}
 		let formElementArray = [];
+        let companyName = null;
+        let modalDisplay = null;
+		let img = <img alt=''/>;
+		if(submitted){ redirect = <Redirect to={`/company/${match.params.companyId}`} />; }
+		if(selectedCompany){
+            if(selectedCompany.img){ img = <img src={selectedCompany.img} alt="Company Logo" />; }
+            if(selectedCompany.name){ companyName = selectedCompany.name; }
+		}
 		for (let key in formData) {
 			formElementArray.push({
 				id: key,
 				config: formData[key]
 			});
 		}
+        if(submitClicked){ modalDisplay = <Loader />; }
+        else {
+            modalDisplay = (
+                <Aux>
+					<p>Competition Created and Successfully Added to {companyName}</p>
+					<button onClick={this.removeModal}>Continue</button>
+                </Aux>
+            );
+        }
 		return (
 			<Aux>
 				{redirect}
 				<form ref={form} className='CompetitionForm' onSubmit={this.handleSubmit}>
 					{img}
-					<h2>Create New Competition for {selectedCompany.name}</h2>
+                    <h2>{companyName}</h2>
+					<h3>Create A New Competition</h3>
 					{
 						formElementArray.map(formElement=>{
 							const { id, config } = formElement;
@@ -141,10 +170,7 @@ class NewCompetition extends Component {
 					}
 					<Modal show={showSuccessInfo} modalClosed={this.removeModal}
 							successfull={true}>
-							<div>
-								<p>Competition Created and Successfully Added to {selectedCompany.name}</p>
-								<button onClick={this.removeModal}>Continue</button>
-							</div>
+							<div>{modalDisplay}</div>
 					</Modal>
 				</form>
 			</Aux>
@@ -154,13 +180,15 @@ class NewCompetition extends Component {
 
 const mapStateToProps = state =>{
     return {
-        selectedCompany: state.company.selectedCompany
+        selectedCompany: state.company.selectedCompany,
+        successfull: state.company.addCompetitionSuccess
     }
 }
 const mapDispatchToProps = dispatch =>{
 	return {
         onInit: (companyId)=>dispatch(actions.getCompanyRequest(companyId)),
- 		onSubmitAdd: (company)=>dispatch(actions.addCompetition(company))
+        onAddInit: ()=>dispatch(actions.addCompetitionInit()),
+ 		onSubmitAdd: (competition)=>dispatch(actions.addCompetitionRequest(competition))
  	};
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(NewCompetition));

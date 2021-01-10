@@ -15,14 +15,24 @@ class EditCategory extends Component {
     	error: false,
     	submitted: false,
     	showSuccessInfo: false,
+        submitClicked: false,
         touched: false
     }
     componentDidMount(){
-        this.props.onInit(+this.props.match.params.companyId, +this.props.match.params.competitionId);
+        this.props.onEditInit();
+        this.props.onInit(
+            +this.props.match.params.companyId,
+            +this.props.match.params.competitionId,
+            +this.props.match.params.categoryId
+            );
     }
     static getDerivedStateFromProps(props, state){
         if(props.categoryToBeEdited !== state.categoryToBeEdited && !state.touched){
+            console.log(true);
             return { categoryToBeEdited: props.categoryToBeEdited };
+        }
+        if(props.successfull){
+            return { submitClicked: false };
         }
         return null;
     }
@@ -33,16 +43,16 @@ class EditCategory extends Component {
     }
     handleSubmit = (e)=>{
     	e.preventDefault();
-    	// let fd = new FormData(this.state.form.current);
-    	this.props.onSubmitEdit(this.state.categoryToBeEdited);
-    	this.setState({ showSuccessInfo: true });
+    	let fd = new FormData(this.state.form.current);
+    	this.props.onSubmitEdit(+this.props.match.params.categoryId, fd);
+    	this.setState({ submitClicked: true, showSuccessInfo: true });
     }
     removeModal = ()=>{
     	this.setState({ showSuccessInfo: false, submitted: true });
     }
 	render(){
 		const { 
-			submitted, form, showSuccessInfo, categoryToBeEdited, error
+			submitted, form, showSuccessInfo, categoryToBeEdited, error, submitClicked
 		} = this.state;
         const { company, match } = this.props;
         let displayForm = null;
@@ -53,23 +63,33 @@ class EditCategory extends Component {
         }else {
     		let redirect = null;
     		let img = <img src={company.img} alt="Company Logo" />
+            let modalDisplay = null;
     		if(submitted){
     			redirect = <Redirect to={`/company/${match.params.companyId}/competition/${match.params.competitionId}`} />
     		}
-                let elementConfig = {
-                    options: [
-                        {
-                            value: 'first-past-the-post',
-                            displayValue: 'First Past The Post'
-                        }
-                    ]
-                };
-    		   displayForm = (
+            if(submitClicked){ modalDisplay = <Loader />; }
+            else {
+                modalDisplay = (
+                    <Aux>
+                        <p>{categoryToBeEdited.name} Updated Successfully</p>
+                        <button onClick={this.removeModal}>Continue</button>
+                    </Aux>
+                );
+            }
+            let elementConfig = {
+                options: [
+                    {
+                        value: 'first-past-the-post',
+                        displayValue: 'First Past The Post'
+                    }
+                ]
+            };
+		    displayForm = (
                 <Aux>
     				{redirect}
     				<form ref={form} className='CategoryForm' onSubmit={this.handleSubmit}>
     					{img}
-    					<h2>Update Category Data</h2>
+    					<h3>Update Category Data</h3>
     					<InputGroup 
                             classes='name'
                             name='name'
@@ -79,9 +99,17 @@ class EditCategory extends Component {
                             handleInputValue={this.handleInputValue}
                         />
                         <InputGroup 
+                            classes='description'
+                            name='description'
+                            title='Description'
+                            type='text'
+                            value={categoryToBeEdited.description}
+                            handleInputValue={this.handleInputValue}
+                        />
+                        <InputGroup 
                             classes='type'
                             name='type'
-                            title='type'
+                            title='Type'
                             type='text'
                             elementType='select'
                             elementConfig={elementConfig}
@@ -93,14 +121,11 @@ class EditCategory extends Component {
                         </div>
     					<Modal show={showSuccessInfo} modalClosed={this.removeModal}
     							successfull={true}>
-    							<div>
-    								<p>{categoryToBeEdited.name} Updated Successfully</p>
-    								<button onClick={this.removeModal}>Continue</button>
-    							</div>
+    							<div>{modalDisplay}</div>
     					</Modal>
     				</form>
                 </Aux>
-                );
+            );
         }
 		return (
 			<Aux>
@@ -113,13 +138,15 @@ class EditCategory extends Component {
 const mapStateToProps = state =>{
     return {
         company: state.company.selectedCompany,
-        categoryToBeEdited: state.company.selectedCompetition
+        categoryToBeEdited: state.company.selectedCategory,
+        successfull: state.company.editCategorySuccess
     }
 }
 const mapDispatchToProps = dispatch =>{
 	return {
-        onInit: (companyId, competitionId)=>dispatch(actions.getCompetitionRequest(companyId, competitionId)),
- 		onSubmitEdit: (company)=>dispatch(actions.addCompany(company))
+        onInit: (companyId, competitionId, categoryId)=>dispatch(actions.getCategoryRequest(companyId, competitionId, categoryId)),
+        onEditInit: ()=>dispatch(actions.editCategoryInit()) ,
+ 		onSubmitEdit: (categoryId, categoryData)=>dispatch(actions.editCategoryRequest(categoryId, categoryData))
  	};
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EditCategory));

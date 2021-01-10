@@ -12,7 +12,12 @@ const company = ( props )=>{
 					<Link to={`/company/${company.fakeId}`}>
 						<p>{company.name}</p>
 					</Link>
-					<em>{`${company.description.slice(0, 50)} ...`}</em>
+					<em>
+						{(company.description.length >= 75)?
+							`${company.description.slice(0, 75)} ...`:
+							company.description
+						}
+					</em>
 					<div>
 						<span>
 							{socials.map(social=>{

@@ -2,6 +2,7 @@
   $value: $size / 16px;
   @return #{$value}rem;
 }
+
 .App {
   font-size: calc(13px + 1vmin);
   justify-content: center;
@@ -34,7 +35,7 @@
         display: inline-block;
         margin: 20px;
         padding: 0 5px;
-        width: 80px;
+        width: max-content;
         
         a{    
           color: black;
@@ -68,6 +69,10 @@
             } 
           }
         }
+
+        @media (max-width: 1000px) { margin: 20px 15px; }
+        @media (max-width: 780px) { margin: 20px 10px; }
+        @media (max-width: 580px) { margin: 20px 5px; }
       }
     }
   }
@@ -81,10 +86,8 @@
   @media (max-width: 500px) {
     width: 100%;
     height: 100%;
-    //max-height: 100%;
     min-height: 30%;
-    margin: 70px 0 0;
-    //background-color: red;
+    margin: 15px 0 0;
 
     & nav {
       width: 80%;
@@ -207,7 +210,7 @@
                 font-size: px-to-rem(18px);
               }
               p{
-                font-size: px-to-rem(14px);                
+                font-size: px-to-rem(14px);
               }
             }
           }
@@ -270,6 +273,161 @@
             transform: scale(1.15) translateY(14px);
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
             z-index: 10;
+          }
+        }
+      }
+      @media (max-width: 500px) {
+        width: 100%;
+        & .Landing {
+          & .Left-Landing {
+            padding-left: 20px;
+            padding-top: 20px;
+            grid-row: 4 / 7;
+            grid-column: 1 / 7;
+            p {
+              font-size: 15px;
+            }
+          }
+          & .Right-Landing {
+            grid-row: 1 / 4;
+            grid-column: 1 / 7;
+            img{
+              width: 200px;
+              height: 200px;
+            }
+          }
+        }
+        & .Services {
+          align-items: center;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          color: #cfcfcf;
+
+          article {
+            flex-direction: column;
+
+            figure {
+              width: 78%;
+            }
+
+            div{
+              margin-left: 0;
+              padding-right: 0;
+
+              h2 {
+                margin-bottom: px-to-rem(8px);
+              }
+
+              p {
+                width: 90%;
+                line-height: 150%;
+                text-align: justify;
+                padding-bottom: 15px;
+              }
+            }
+          }
+          article:nth-of-type(2) {
+            left: 0;
+          }
+        }
+        & .Active-Contests{
+          & .Cards{
+            flex-wrap: wrap;
+            justify-content: center;
+            & .Card{
+              margin: 10px 0;
+            }
+            & .Card:nth-of-type(2){
+              transform: scale(1);
+              box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+            }
+          }
+        }
+      }
+    }
+    & .Intro{
+      color: white;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      & .Intro-Top {
+
+        & button{
+          background-color: rgba(white, 0.85);
+          border-radius: 20px;
+          width: 100px;
+          height: 25px;
+          outline: none;
+          border: none;
+          box-shadow: 2px 2px 2px 2px hsl(180, 52%, 96%);
+        }
+      }
+      & .Trending {
+        border-radius: 5px;
+        width: 80%;
+        margin: 10px auto;
+        background-color: rgba(white, 0.8);
+        color: black;
+        & .Trending-Top {
+          display: flex;
+          flex-direction: row;
+          width: 90%;
+          margin: auto;
+
+          & hr {
+            margin: 30px auto;
+            display: block;
+            height: 0px;
+            border-top: 1px solid black;
+            //border-bottom: 15px solid black;
+            width: 82%;
+          }
+          & p{
+            margin: 15px auto;
+          }
+        }
+        & .Trending-Bottom {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          width: 90%;
+          margin: auto;
+
+          & .Trending-Contest{
+            width: 31%;
+            margin: 10px;
+            background-color: white;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px hsl(180, 52%, 96%);
+            
+            & h4{
+              margin: 10px 0;
+              text-align: left;
+              padding-left: 15px;
+              color: rgba(40, 21, 89, 1);
+            }
+            & img{
+              width: 90%;
+            }
+            & .Title{
+              text-align: left;
+              padding-left: 15px;
+              font-weight: 600;
+              margin: 0;
+            }
+            & .Contest-Bottom{
+              padding-left: 15px;
+              display: flex;
+              flex-direction: row;
+
+              p{
+                padding: 0 5px;
+              }
+
+              & .Dot{
+                font-weight: 1000;
+              }
+            }
           }
         }
       }
@@ -355,29 +513,8 @@
       .Companies-Top{
         height: 100px;
         width: 100%;
-        .Add-Company{
-          height: 50px;
-          width: 50px;
-          background-color: rgba(red, 0.25);
-          margin-right: 10px;
-          margin-left: auto;
-          margin-top: 10px;
-          border-radius: 50%;
-          background-image: url('../../assets/svgs/icon-remove.svg');
-          background-repeat: no-repeat;
-          background-position: center;
-          transform: rotate(45deg);
-          transition-delay: 0.01s;
-          transition-timing-function: ease-out-in;
-          transition-property: z-index, transform;
-          transition-duration: 0.5s;
-
-
-          &:hover{
-            transform: rotate(135deg) scale(1.12);
-            background-color: rgba(red, 0.5);
-          }
-        }
+        display: flex;
+        flex-direction: row-reverse;
       }
 
       .Company{
@@ -448,6 +585,75 @@
             }
           }
         }
+        @media (max-width: 1000px) { width: 30%; }
+        @media (max-width: 780px) { width: 40%; }
+        @media (max-width: 580px) { width: 45%; }
+      }
+      @media (max-width: 500px) {
+        margin: 50px auto 20px auto;
+        height: 100%;
+        width: 90%;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        background-color: rgba(white, 0.1);
+        overflow-y: overflow;
+
+        .Companies-Top{
+          height: 65px;
+          width: 100%;
+          display: flex;
+          flex-direction: row-reverse;
+        }
+
+        .Company{
+          padding: 0;
+          border-radius: 10px;
+          width: 47.5%;
+          height: 250px;
+          background-color: purple;
+          margin: 7px 3.5px;
+          background-color: rgba(black, 0.25);
+          overflow: hidden;
+
+          img{
+            border-radius: 10px;
+            height: 150px;
+            object-fit: cover;
+          }
+          .Company-Body{            
+            .Company-Body-Cover{
+              top: 0px;
+              height: 100px;
+              width: 101%;
+              background-color: rgba(30, 30, 30, .25);
+              transform: translateX(0);
+              z-index: 1;
+
+              em { display: none; }
+
+              div {
+                span{
+                  justify-content: space-between;
+                  display: flex;
+                  flex-direction: row;
+                  padding-left: 30px;
+                  padding-right: 30px;                
+                }
+              }
+            }
+          }
+          &:hover {
+            overflow: visible;
+            .Company-Body{
+              .Company-Body-Cover{
+                transform: translateX(0);
+                z-index: 1;
+              }
+            }
+          }
+        }
       }
     }
     & .Company{
@@ -465,14 +671,14 @@
 
         img{
           height: 95%;
-          width: 55%;
-          grid-row: 1 / 5;
+          width: 65%;
+          grid-row: 1 / 6;
           grid-column: 1 / 3;
           margin: auto;
         }
         h1{
-          grid-row: 5 / 6;
-          grid-column: 1 / 3;
+          grid-row: 1 / 2;
+          grid-column: 3 / 9;
           margin: 0;
         }
         p{
@@ -492,6 +698,11 @@
             grid-row: 3/ 4;
           }
         }
+        button{
+          grid-column: 9/ 11;
+          grid-row: 4/ 5;          
+          margin: auto;
+        }
       }
       & .Competitions{
         margin: 10px auto 20px auto;
@@ -505,6 +716,18 @@
         overflow-y: overflow;
         border-radius: 10px;
 
+        .Competitions-Top{
+          display: grid;
+          grid-template-columns: 1fr 0.1fr;
+
+          h2{
+            grid-column: 1 / 2;
+          }
+          a{
+            grid-column: 2 / 3;
+          }
+        }
+
         .Competition{
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -512,7 +735,6 @@
           border-radius: 10px;
           width: 95%;
           height: 350px;
-          background-color: purple;
           margin: 10px auto 10px auto;
           background-color: rgba(black, 0.25);
           overflow: hidden;
@@ -613,6 +835,70 @@
           }
         }
       }
+
+      @media (max-width: 500px) {
+        & .Company-Top{
+          height: 350px;
+          width: 95%;
+
+          img{
+            width: 85%;
+            grid-row: 1 / 3;
+            grid-column: 4 / 8;
+            margin: auto;
+          }
+          h1{
+            grid-row: 3 / 4;
+            grid-column: 1 / 11;
+          }
+          p{
+            grid-row: 3 / 6;
+            grid-column: 1 / 11;
+            padding: 50px 15px 0;
+          }
+          a {
+            grid-column: 4 / 8;
+            margin: auto auto 0;
+            &.Edit-Btn{
+              grid-row: 5 / 6;
+            }
+          }
+          button{
+            grid-column: 8 / 11;
+            grid-row: 5 / 6;          
+            margin: auto auto 0;
+          }
+        }
+        & .Competitions{
+          .Competitions-Top{
+            display: grid;
+            grid-template-columns: 1fr 0.1fr;
+
+            h2{
+              grid-column: 1 / 2;
+            }
+            a{
+              grid-column: 2 / 3;
+            }
+          }
+
+          .Competition{
+            height: 450px;
+
+            .Categories {
+              width: 98%;
+              margin: auto;
+
+              & .Category{
+                width: 180px;
+                margin: 0 5px;
+                &:nth-of-type(2) { display: none; }
+                &:nth-of-type(3) { display: none; }
+              }
+            }
+          }
+        }
+      }
     }
     & .CompanyForm {
       margin: 50px auto 20px auto;
@@ -660,10 +946,18 @@
       padding-top: 20px;
       background-color: rgba(white, 0.1);
       overflow-x: hidden;
+      min-height: 100%;
 
       & .Competition-Top{
         width: 80%;
         margin: auto;
+        & .Competition-Top-Btns{
+          display: flex;
+          flex-direction: row;
+          margin: auto;
+          width: 300px;
+          justify-content: space-between;
+        }
       }
       & .Competition-Body{
         margin: 10px auto 20px auto;
@@ -678,7 +972,14 @@
         & .wrapper{
           height: 100%;
           padding-bottom: 50px;
-          
+          & .Button{
+            background-color: rgba(purple, 0.2);
+            margin: 0 10px;
+            border: 2px solid white;
+            &:hover{
+              border: 2px solid rgba(black, 0.2);
+            }
+          }
           & .Contestants{
             display: flex;
             flex-direction: column;
@@ -697,17 +998,19 @@
                 border-radius: 10px;
                 position: relative;
                 margin: 0 auto;
+
                 .Contestant-Body-Cover{
+                  display: none;
                   margin: 0 auto;
                   box-sizing: border-box;
                   position: absolute;
-                  top: -204px;
+                  top: -207px;
                   left: 83px;
                   text-align: center;
                   border-radius: 10px;
                   height: 200px;
                   width: 400px;
-                  display: flex;
+                  // display: flex;
                   flex-direction: column;
                   justify-content: center;
                   background-color: rgba(30, 30, 30, .7);
@@ -718,9 +1021,23 @@
                   transition-duration: 0.25s;
                   z-index: -2;
                   color: white;
+                  & .Button{
+                    background-color: rgba(white, 0.2);
+                    margin: 10px auto;
+                    border: 2px solid white;
+                    width: 100px;
 
+                    &:hover{
+                      border: 2px solid rgba(black, 0.2);
+                      background-color: rgba(white, 0.8);
+                    }
+                  }
+                  em{
+                    font-size: 14px;
+                  }
                   a{
                     transition: all ease .2s;
+                    margin: auto;
 
                     &:hover {
                       color: white;
@@ -743,6 +1060,7 @@
                 overflow: visible;
                 .Contestant-Body{
                   .Contestant-Body-Cover{
+                    display: flex;
                     transform: translateY(0);
                     z-index: 1;
                   }
@@ -750,6 +1068,66 @@
               }
             }
           } 
+        }
+      }
+
+      @media (max-width: 500px) {
+        & .Competition-Body{
+          & .wrapper{
+            width: 100%;
+            & .Contestants{
+              & .Contestant{
+                img { width: 330px; height: 330px; }
+                .Contestant-Body{
+                  border-radius: 10px;
+                  position: relative;
+                  margin: 0 auto;
+
+                  .Contestant-Body-Cover{
+                    display: flex;
+                    top: -235px;
+                    left: 2px;
+                    height: 230px;
+                    width: 328px;
+                    transform: translateY(0);
+                    & .Button{
+                      background-color: rgba(white, 0.2);
+                      margin: 10px auto;
+                      border: 2px solid white;
+                      width: 100px;
+
+                      &:hover{
+                        border: 2px solid rgba(black, 0.2);
+                        background-color: rgba(white, 0.8);
+                      }
+                    }
+                    p{
+                      margin: 0;
+                    }
+                    a{
+                      transition: all ease .2s;
+                      margin: auto;
+
+                      &:hover {
+                        color: white;
+                        cursor: pointer;
+                        transform: scale(1.05);
+                      }
+                    }
+                    div {
+                      span{
+                        justify-content: space-between;
+                        display: flex;
+                        flex-direction: row;
+                        padding-left: 150px;
+                        padding-right: 150px;                
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -779,6 +1157,11 @@
         grid-column: 1 / 7;
         grid-row: 3 / 4;
         margin-top: 0;
+      }
+      & h3 {
+        grid-column: 1 / 7;
+        grid-row: 3 / 4;
+        padding-top: 10px;
       }
       & .InputGroup{
         grid-column: 1 / 7;
@@ -837,6 +1220,48 @@
         }
       }
     }
+    & .ContestantForm {
+      margin: 50px auto 20px auto;
+      padding: 30px;
+      width: 50%;
+      height: 350px;
+      background-color: rgba(white, 0.1);
+      border-radius: 7px;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px hsl(180, 52%, 96%);
+      overflow-y: auto;
+      display: grid;
+      grid-template-rows: repeat(6, calc(100%/6));
+      grid-template-columns: repeat(6, calc(100%/6));
+
+      & img {
+        grid-column: 3 / 5;
+        grid-row: 1 / 3;
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
+        margin: auto;
+        background: rgba(black, 0.2345);
+      }
+      & h2 {
+        grid-column: 1 / 7;
+        grid-row: 3 / 4;
+        margin-top: 0;
+      }
+      & .InputGroup{
+        grid-column: 1 / 7;
+      }
+      @media (max-width: 500px) {
+        width: 80%;
+        & .InputGroup {
+          & label{
+            width: 35%;
+          }
+          & input{
+            width: 65%;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -868,6 +1293,14 @@
     padding: 6px 10px;
     display: block;
     box-sizing: border-box;
+    &.Search{
+      width: 75%;
+      margin: auto;
+      border-top: 0;
+      border-right: 0;
+      border-left: 0;
+      background-color: rgba(white, 0.1);
+    }
   }
   & input:focus{
     outline: none;
@@ -907,7 +1340,7 @@
       left: auto;
       right: 10px;
       text-indent: 32px;
-      top: 25px;
+      top: 10px;
       cursor: pointer;
     }
   }
@@ -936,7 +1369,40 @@
     }
   }
 }
+.Button{
+  background-color: rgba(white, 0.35);
+  border-radius: 10px;
+  height: 30px;
+  outline: none;
+  border: none;
+  box-shadow: 1px 1px 1px 1px rgba(white, 0.1);
+  &:hover{ background-color: rgba(white, 0.85); cursor: pointer; }
+}
+a.Add{
+  .Add-Company{
+    height: 50px;
+    width: 50px;
+    background-color: rgba(red, 0.25);
+    margin-right: 10px;
+    margin-left: auto;
+    margin-top: 10px;
+    border-radius: 50%;
+    background-image: url('../../assets/svgs/icon-remove.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(45deg);
+    transition-delay: 0.01s;
+    transition-timing-function: ease-out-in;
+    transition-property: z-index, transform;
+    transition-duration: 0.5s;
 
+
+    &:hover{
+      transform: rotate(135deg) scale(1.12);
+      background-color: rgba(red, 0.5);
+    }
+  }
+}
 $cAccent: #3978EF;
 $cBlack: #121212;
 $cGray: #333;
@@ -957,6 +1423,7 @@ $cLightGray: rgba(#000, 0.1);
       border-top: 1px solid $cLightGray;
     }
   }
+  @media (max-width: 500px) {}
 }
 .accordion-item {
   $self: &;
@@ -989,6 +1456,7 @@ $cLightGray: rgba(#000, 0.1);
     background-color: #fff;
     z-index: 2;
     position: relative;
+    cursor: pointer;
   }
   &__title{
     font-size: 1.6rem;

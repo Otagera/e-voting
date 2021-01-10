@@ -9,6 +9,7 @@ import './index.css';
 import App from './containers/App/App';
 import reportWebVitals from './reportWebVitals';
 import companyReducer from './store/reducers/company';
+import userReducer from './store/reducers/user';
 
 
 if(process.env.NODE_ENV === 'development'){
@@ -36,7 +37,8 @@ axios.interceptors.response.use(response=>{
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-	company: companyReducer
+	company: companyReducer,
+	user: userReducer
 });
 
 const logger = store => {

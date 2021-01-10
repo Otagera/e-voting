@@ -1,34 +1,68 @@
 import * as actionTypes from './actionTypes';
 import UserService from '../../services/UserService';
 
-export const addCompany = (company) =>{
+//Company
+export const addCompanyInit = () =>{
+	return {
+		type: actionTypes.ADD_COMPANY_INIT
+	};
+}
+const addCompany = success =>{
 	return {
 		type: actionTypes.ADD_COMPANY,
-		newCompany: company
+		success: success
 	};
 }
+export const addCompanyRequest = companyData =>{
+	return dispatch =>{
+		UserService.postCompany(companyData)
+			.then(response=>{
+				if(response.status === 201) { dispatch(addCompany(true)); }
+			}).catch(err=>{console.log(err); dispatch(addCompany(false))});
+	}
+}
 
-export const removeCompany = () =>{
+export const removeCompanyInit = () =>{
 	return {
-		type: actionTypes.REMOVE_COMPANY
+		type: actionTypes.REMOVE_COMPANY_INIT
 	};
 }
+const removeCompany = success =>{
+	return {
+		type: actionTypes.REMOVE_COMPANY,
+		success: success
+	};
+}
+export const removeCompanyRequest = (fakeId) =>{
+	return dispatch =>{
+		UserService.deleteCompany(fakeId)
+			.then(response=>{
+				if(response.status === 200) { dispatch(removeCompany(true)); }
+			}).catch(err=>{console.log(err); dispatch(removeCompany(false))});
+	}
+}
 
-const editCompany = (company) =>{
+export const editCompanyInit = () =>{
+	return {
+		type: actionTypes.EDIT_COMPANY_INIT
+	};
+}
+const editCompany = success =>{
 	return {
 		type: actionTypes.EDIT_COMPANY,
-		editedCompany: company
+		success: success
 	};
 }
-export const editCompanyRequest = (company) =>{
-	return dispatch => {
-		setTimeout(()=>{
-			dispatch(editCompany(company));
-		}, 2000);
-	};
+export const editCompanyRequest = (fakeId, companyData) =>{
+	return dispatch =>{
+		UserService.putCompany(fakeId, companyData)
+			.then(response=>{
+				if(response.status === 200) { dispatch(editCompany(true)); }
+			}).catch(err=>{console.log(err); dispatch(editCompany(false))});
+	}
 }
 
-const getCompanies = (companies) =>{
+const getCompanies = companies =>{
 	return {
 		type: actionTypes.GET_COMPANIES,
 		companies: companies
@@ -104,12 +138,49 @@ export const getCompanyRequest = fakeId =>{
 		});
 	};
 }
-export const addCompetition = competition =>{
+
+
+//Competition
+export const addCompetitionInit = () =>{
 	return {
-		type: actionTypes.ADD_COMPETITION,
-		newCompetition: competition
+		type: actionTypes.ADD_COMPETITION_INIT
 	};
 }
+const addCompetition = success =>{
+	return {
+		type: actionTypes.ADD_COMPETITION,
+		success: success
+	};
+}
+export const addCompetitionRequest = competitionData =>{
+	return dispatch =>{
+		UserService.postCompetition(competitionData)
+			.then(response=>{
+				if(response.status === 201){ dispatch(addCompetition(true)); }
+			}).catch(err=>{console.log(err); dispatch(addCompetition(false)); });
+	}
+}
+
+export const editCompetitionInit = () =>{
+	return {
+		type: actionTypes.EDIT_COMPETITION_INIT
+	};
+}
+const editCompetition = success =>{
+	return {
+		type: actionTypes.EDIT_COMPETITION,
+		success: success
+	};
+}
+export const editCompetitionRequest = (fakeId, competitionData) =>{
+	return dispatch =>{
+		UserService.putCompetition(fakeId, competitionData)
+			.then(response=>{
+				if(response.status === 200) { dispatch(editCompetition(true)); }
+			}).catch(err=>{console.log(err); dispatch(editCompetition(false))});
+	}
+}
+
 const getCompetition = (company, competition) =>{
 	return {
 		type: actionTypes.GET_COMPETITION,
@@ -148,9 +219,172 @@ export const getCompetitionRequest = (companyFakeId, competitionFakeId) =>{
 		});
 	};
 }
-/*const getCompetitions = competitions =>{
+
+
+//Category
+export const addCategoryInit = () =>{
 	return {
-		type: actionTypes.GET_COMPETITIONS,
-		competitions: competitions
+		type: actionTypes.ADD_CATEGORY_INIT
 	};
-}*/
+}
+const addCategory = success =>{
+	return {
+		type: actionTypes.ADD_CATEGORY,
+		success: success
+	};
+}
+export const addCategoryRequest = categoryData =>{
+	return dispatch =>{
+		UserService.postCategory(categoryData)
+			.then(response=>{
+				if(response.status === 201){ dispatch(addCategory(true)); }
+			}).catch(err=>{console.log(err); dispatch(addCategory(false)); });
+	}
+}
+
+export const editCategoryInit = () =>{
+	return {
+		type: actionTypes.EDIT_CATEGORY_INIT
+	};
+}
+const editCategory = success =>{
+	return {
+		type: actionTypes.EDIT_CATEGORY,
+		success: success
+	};
+}
+export const editCategoryRequest = (fakeId, categoryData) =>{
+	return dispatch =>{
+		UserService.putCategory(fakeId, categoryData)
+			.then(response=>{
+				if(response.status === 200) { dispatch(editCategory(true)); }
+			}).catch(err=>{console.log(err); dispatch(editCategory(false))});
+	}
+}
+
+const getCategory = (company, competition, category) =>{
+	return {
+		type: actionTypes.GET_CATEGORY,
+		company: company,
+		competition: competition,
+		category: category
+	};
+}
+export const getCategoryRequest = (companyFakeId, competitionFakeId, categoryFakeId) =>{
+	return dispatch =>{
+		new Promise((resolve, reject)=>{
+			UserService.getCompetition(competitionFakeId)
+				.then(response=>{
+					let competition = response.data.competition;
+					resolve(competition)
+				}).catch(err=>reject(err));
+		}).then(competition=>{
+			return new Promise((resolve, reject)=>{
+	            UserService.getCategories(competition.fakeId).then(catResponse=>{
+					competition.categories = catResponse.data.categories;
+					resolve(competition);
+	    		}).catch(err=>reject(err));
+			});
+		}).then(competition=>{
+			return new Promise((resolve, reject)=>{
+				UserService.getCompany(companyFakeId)
+					.then(response=>{
+		            	let company = response.data.company;
+		                company.img = UserService.updateImgURL(company.img);
+		                resolve([company, competition]);
+					}).catch(err=>reject(err));
+			});
+		}).then(([company, competition])=>{
+			return new Promise((resolve, reject)=>{
+				UserService.getCategory(categoryFakeId)
+					.then(response=>{
+						let category = response.data.category;
+						resolve([company, competition, category]);
+					}).catch(err=>reject(err));
+			})
+		}).then(([company, competition, category])=>{
+			dispatch(getCategory(company, competition, category));
+		}).catch(err=>{
+			console.log(err);
+		});
+	};
+}
+
+//Contestant
+export const addContestantInit = () =>{
+	return {
+		type: actionTypes.ADD_CONTESTANT_INIT
+	};
+}
+const addContestant = success =>{
+	return {
+		type: actionTypes.ADD_CONTESTANT,
+		success: success
+	};
+}
+export const addContestantRequest = (categoryFakeId, contestantData) =>{
+	return dispatch =>{
+		UserService.postContestant(categoryFakeId, contestantData)
+			.then(response=>{
+				if(response.status === 200){ dispatch(addContestant(true)); }
+			}).catch(err=>{console.log(err); dispatch(addContestant(false)); });
+	}
+}
+
+export const editContestantInit = () =>{
+	return {
+		type: actionTypes.EDIT_CONTESTANT_INIT
+	};
+}
+const editContestant = success =>{
+	return {
+		type: actionTypes.EDIT_CONTESTANT,
+		success: success
+	};
+}
+export const editContestantRequest = (categoryFakeId, contestantFakeId, categoryData) =>{
+	return dispatch =>{
+		UserService.putContestant(categoryFakeId, contestantFakeId, categoryData)
+			.then(response=>{
+				if(response.status === 201) { dispatch(editContestant(true)); }
+			}).catch(err=>{console.log(err); dispatch(editContestant(false))});
+	}
+}
+
+const getContestant = contestant =>{
+	return {
+		type: actionTypes.GET_CONTESTANT,
+		contestant: contestant
+	};
+}
+export const getContestantRequest = (categoryFakeId, contestantFakeId) =>{
+	return dispatch =>{
+		new Promise((resolve, reject)=>{
+			UserService.getContestant(categoryFakeId, contestantFakeId)
+				.then(response=>{
+					let contestant = response.data.contestant;
+	                contestant.img = UserService.updateImgURL(contestant.img);
+					resolve(contestant);
+				}).catch(err=>reject(err));
+		}).then(contestant=>{
+			dispatch(getContestant(contestant));
+		}).catch(err=>{
+			console.log(err);
+		});
+	};
+}
+
+const voteContestant = success =>{
+	return {
+		type: actionTypes.VOTE_CONTESTANT,
+		success: success
+	};
+}
+export const voteContestantRequest = (categoryFakeId, contestantFakeId) =>{
+	return dispatch =>{
+		UserService.voteContestant(categoryFakeId, contestantFakeId)
+			.then(response=>{
+				if(response.status === 200) { dispatch(voteContestant(true)); }
+			}).catch(err=>{console.log(err); dispatch(voteContestant(false))});
+	}
+}

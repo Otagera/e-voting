@@ -6,6 +6,7 @@ import Aux from '../../../../../hoc/Auxillary/Auxillary';
 import Category from './Category';
 import Accordion from '../../../../UI/Accordion/Accordion';
 import Loader from '../../../../UI/Loader/Loader';
+import SetVotingDeadline from '../../../../../services/setVotingDeadline';
 import * as actions from '../../../../../store/actions/index.js';
 
 class Competition extends Component {
@@ -15,7 +16,7 @@ class Competition extends Component {
 		onInit(+match.params.companyId, +match.params.competitionId);
 	}
 	render(){
-		const { selectedCompany, selectedCompetition, faSocials, match } = this.props;
+		const { selectedCompany, selectedCompetition, faSocials, match, userAvaliable } = this.props;
 		let display = null;
 		if(!selectedCompetition){
 			display = <Loader />
@@ -31,16 +32,21 @@ class Competition extends Component {
 					{img}
 					<h2>{selectedCompetition.name}</h2>
 					<p>{selectedCompetition.description}</p>
-					<Link 
-						to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/edit`}
-						className='Edit-Btn'>
-						<button> Edit Competition Data </button>
-					</Link>
-					<Link
-						to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/categories/new`}
-						className='Edit-Btn'>
-						<button> Add a new category </button>
-					</Link>
+					{userAvaliable && 
+						<div className='Competition-Top-Btns'>
+							<Link 
+								to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/edit`}
+								className='Edit-Btn'>
+								<button className='Button'> Edit Competition Data </button>
+							</Link>
+							<Link
+								to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/categories/new`}
+								className='Edit-Btn'>
+								<button className='Button'> Add a new category </button>
+							</Link>
+						</div>
+					}
+					<p> Voting { SetVotingDeadline(selectedCompetition.deadline)} </p>
 				</div>
 				<div className='Competition-Body'>
 					<h3>Categories</h3>
@@ -69,6 +75,7 @@ const mapStateToProps = state =>{
 	return {
 		selectedCompany: state.company.selectedCompany,
 		selectedCompetition: state.company.selectedCompetition,
+        userAvaliable: state.user.userAvaliable,
 		faSocials: state.company.faSocials
 	}
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Aux from '../Auxillary/Auxillary';
+import * as actions from '../../store/actions/index';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 
@@ -8,6 +10,9 @@ class Layout extends Component{
 	state = {
 		showSideDrawer: false
 	}
+    componentDidMount(){
+        this.props.onInit();
+    }
 	sideDrawerClosedHandler = ()=>{
 		this.setState({ showSideDrawer: false });
 	}
@@ -30,4 +35,9 @@ class Layout extends Component{
 		);
 	}
 }
-export default Layout;
+const mapDispatchToProps = dispatch =>{
+    return {
+        onInit: ()=>dispatch(actions.checkUserAvaIlability())
+    };
+}
+export default connect(null, mapDispatchToProps)(Layout);

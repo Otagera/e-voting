@@ -13,8 +13,8 @@ const accordion = ( props )=>{
 					let Component = datum.component;
 					return (
 						<li {...{className: 'accordion-list__item', key: key}}>
-							<AccordionItem {...datum}>
-								<Component {...datum.sentProps} {...{key: key}}/>
+							<AccordionItem {...datum} key={key}>
+								<Component {...datum.sentProps} key={key}/>
 							</AccordionItem>
 						</li>
 					);

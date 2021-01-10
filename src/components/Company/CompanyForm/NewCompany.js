@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import black from '../../../assets/images/ali.jpg';
 import InputGroup from '../../UI/InputGroup/InputGroup';
 import Modal from '../../UI/Modal/Modal';
+import Loader from '../../UI/Loader/Loader';
 import Aux from '../../../hoc/Auxillary/Auxillary';
 import FormValidation from '../../../services/FormValidation';
 import * as actions from '../../../store/actions/index';
@@ -122,28 +124,20 @@ class NewCompany extends Component {
     	error: false,
     	formIsValid: false,
     	submitted: false,
-    	showSuccessInfo: false,
-    	companyToSubmit: {
-    		img: '',
-    		name: '',
-    		description: '',
-    		socials: {
-    			fb: '',
-    			twitter: '',
-    			insta: '',
-    			website: ''
-    		}
-    	}
+        submitClicked: false,
+    	showSuccessInfo: false
+    }
+    componentDidMount(){
+        this.props.onInit();
+    }
+    static getDerivedStateFromProps(props, state){
+        if(props.successfull){
+            return { submitClicked: false };
+        }
+        return null;
     }
     handleInputValue = (value, name) =>{
     	let formData = { ...this.state.formData };
-    	let comToSub = { ...this.state.companyToSubmit };
-    	const socials = ['fb', 'twitter', 'insta', 'website'];
-    	if(socials.includes(name)){
-    		comToSub.socials[name] = value;
-    	}else{
-    		comToSub[name] = value;
-    	}
     	formData[name].value = value;
     	formData[name].valid = FormValidation.checkValidity(formData[name].value, formData[name].validation);
     	formData[name].touched = true;
@@ -153,13 +147,16 @@ class NewCompany extends Component {
     		formIsValid = formData[inputIdentifiers].valid && formIsValid;
     	}
 
-    	this.setState({ formData: formData, formIsValid: formIsValid, companyToSubmit: comToSub });
+    	this.setState({ formData: formData, formIsValid: formIsValid });
     }
     handleSubmit = (e)=>{
     	e.preventDefault();
-    	// let fd = new FormData(this.state.form.current);
-    	this.props.onSubmitAdd(this.state.companyToSubmit);
-    	this.setState({ showSuccessInfo: true });
+    	let fd = new FormData(this.state.form.current);
+        if(this.state.img.current.files.length <= 0){
+            fd.set('img', black);
+        }
+    	this.props.onSubmitAdd(fd);
+    	this.setState({ submitClicked: true, showSuccessInfo: true });
     }
     removeModal = ()=>{
     	this.setState({ showSuccessInfo: false, submitted: true });
@@ -167,17 +164,13 @@ class NewCompany extends Component {
     handleInputImg = () =>{
     	this.setState(prevState=>{
     		return {
-    			imgDisplay: URL.createObjectURL(this.state.img.current.files[0]),
-    			companyToSubmit: {
-    				...prevState.companyToSubmit,
-    				img: URL.createObjectURL(this.state.img.current.files[0])
-    			}
+    			imgDisplay: URL.createObjectURL(this.state.img.current.files[0])
     		}
     	});
     }
 	render(){
 		const { 
-			submitted, formData, form,
+			submitted, formData, form, submitClicked,
 			formIsValid, imgDisplay, showSuccessInfo
 		} = this.state;
 		let redirect = null;
@@ -195,6 +188,17 @@ class NewCompany extends Component {
 				config: formData[key]
 			});
 		}
+        let modalDisplay = null;
+        if(submitClicked){
+            modalDisplay = <Loader />;
+        }else {
+            modalDisplay = (
+                <Aux>
+                    <p>Company Created Successfully</p>
+                    <button onClick={this.removeModal}> Continue </button>
+                </Aux>
+                );
+        }
 		return (
 			<Aux>
 				{redirect}
@@ -229,10 +233,7 @@ class NewCompany extends Component {
 					}
 					<Modal show={showSuccessInfo} modalClosed={this.removeModal}
 							successfull={true}>
-							<div>
-								<p>Company Created Successfully</p>
-								<button onClick={this.removeModal}>Continue</button>
-							</div>
+							<div>{modalDisplay}</div>
 					</Modal>
 				</form>
 			</Aux>
@@ -240,9 +241,15 @@ class NewCompany extends Component {
 	}
 }
 
+const mapStateToProps = state =>{
+    return {
+        successfull: state.company.addCompanySuccess
+    }
+}
 const mapDispatchToProps = dispatch =>{
 	return {
- 		onSubmitAdd: (company)=>dispatch(actions.addCompany(company))
+        onInit: ()=>dispatch(actions.addCompanyInit()),
+ 		onSubmitAdd: (company)=>dispatch(actions.addCompanyRequest(company))
  	};
 }
-export default connect(null, mapDispatchToProps)(NewCompany);
+export default connect(mapStateToProps, mapDispatchToProps)(NewCompany);

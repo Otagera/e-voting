@@ -1,11 +1,12 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Aux from '../../../../../hoc/Auxillary/Auxillary';
 import Contestant from './Contestant';
 
 const category = ( props )=>{
-	const { category, faSocials, match } = props;
+	const { category, faSocials, match, userAvaliable } = props;
 	const { contestants } = category;
 	let display = null;
 	if(contestants.length <= 0){
@@ -27,6 +28,7 @@ const category = ( props )=>{
 								contestant={contestant.contestant}
 								socials={socials}
 								faSocials={faSocials}
+								categoryFakeId={category.fakeId}
 								key={contestant.fakeId} />
 						)
 					})
@@ -37,15 +39,27 @@ const category = ( props )=>{
 	return (
 		<article>
 			{/*<h5>{category.type}</h5>*/}
-			<Link 
-				to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/category/${category.fakeId}/edit`}
-				className='Edit-Btn'>
-					<button> Edit Category Data </button>
-			</Link>
+			{userAvaliable && <Aux>
+				<Link 
+					to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/category/${category.fakeId}/edit`}
+					className='Edit-Btn'>
+						<button className='Button'> Edit Category Data </button>
+				</Link>
+				<Link 
+					to={`/company/${match.params.companyId}/competition/${match.params.competitionId}/category/${category.fakeId}/contestants/new`}
+					className='Edit-Btn'>
+						<button className='Button'> Add Contestant </button>
+				</Link>
+			</Aux>}
 			<div className='Contestants'>
 				{display}
 			</div>
 		</article>
 	);
 }
-export default withRouter(category);
+const mapStateToProps = state =>{
+	return {
+        userAvaliable: state.user.userAvaliable
+	}
+}
+export default connect(mapStateToProps, null)(withRouter(category));

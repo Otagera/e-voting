@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -32,10 +31,13 @@ class InputGroup extends Component{
 		const { 
 			invalid, shouldValidate, touched, elementType,
 			elementConfig, name, passwordType, handleShowPassword,
-			passwordRevealed, title
+			passwordRevealed, title, classes
 		} = this.props;
 		let inputElement = null;
-		let inputClasses = [];
+		let inputClasses = [classes];
+		let icon = null;
+		let validError = null;
+		let label = <label>{title}</label>;
 		if(invalid && shouldValidate && touched){
 			inputClasses.push('Invalid');
 		}
@@ -64,7 +66,7 @@ class InputGroup extends Component{
 									value={this.state[name]}
 									onChange={this.handleChange}
 									name={name} >
-									<option value='' selected></option>
+									<option value='' defaultValue></option>
 									{
 										elementConfig.options.map(option=>(
 											<option key={option.value} value={option.value}>{option.displayValue}</option>
@@ -78,6 +80,14 @@ class InputGroup extends Component{
 									ref={this.props.ref}
 									className={inputClasses.join(' ')}
 									name={name}
+									onChange={this.handleChange} />
+				break;
+			case ('date'):
+				inputElement = <input
+									type="date"
+									className={inputClasses.join(' ')}
+									name={name}
+									value={(this.props.value)? this.props.value: new Date().toISOString().substr(0, 10)}
 									onChange={this.handleChange} />
 				break;
 			case ('submit'):
@@ -97,7 +107,6 @@ class InputGroup extends Component{
 									name={name} />;
 				break;
 		}
-		let icon = null;
 		if(passwordType){
 			icon = <span onClick={handleShowPassword.bind(this, name)}>
 						<span className='IconSpan'>
@@ -107,7 +116,6 @@ class InputGroup extends Component{
 						</span>
 					</span>
 		}
-		let validError = null;
 		if(invalid && shouldValidate && touched){
 			let text = null;
 			if(shouldValidate.required) {
@@ -149,9 +157,12 @@ class InputGroup extends Component{
 							</span>
 						</span>
 		}
+		if(this.props.elementType === 'submit' || this.props.elementType === 'search'){
+			label = null;
+		}
 		return(
 			<div className={`FlexRow InputGroup`}>
-				{(this.props.elementType !== 'submit')? <label>{title}</label> : null}
+				{label}
 				{validError}
 				{inputElement}
 				{icon}

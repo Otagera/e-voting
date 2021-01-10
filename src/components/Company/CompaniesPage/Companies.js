@@ -15,7 +15,7 @@ class Companies extends Component {
     	this.props.onInit();
     }
 	render(){
-		const { companies, faSocials } = this.props;
+		const { companies, faSocials, userAvaliable } = this.props;
 		const { error } = this.state;
 		let display = null;
 		if(!companies){
@@ -31,8 +31,8 @@ class Companies extends Component {
 						let socials = [];
 						for(let key in company.socials){
 							socials.push({
-								id: key,
-								url: company.socials[key]
+								id: company.socials[key].social,
+								url: company.socials[key].link
 							});
 						}
 						return (<Company 
@@ -47,9 +47,13 @@ class Companies extends Component {
 		return (
 			<section className='Companies'>
 				<div className='Companies-Top'>
-					<Link to='/companies/new'>
-						<div className='Add-Company'></div>
-					</Link>
+					<Aux>
+						{/*userAvaliable && 
+						*/}
+							<Link to='/companies/new' className='Add'>
+								<div className='Add-Company'></div>
+							</Link>
+					</Aux>
 				</div>
 				{display}
 			</section>
@@ -59,7 +63,8 @@ class Companies extends Component {
 const mapStateToProps = state =>{
 	return {
 		companies: state.company.companies,
-		faSocials: state.company.faSocials
+		faSocials: state.company.faSocials,
+        userAvaliable: state.user.userAvaliable
 	}
 }
 const mapDispatchToProps = dispatch =>{
